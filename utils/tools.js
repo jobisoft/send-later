@@ -371,14 +371,24 @@ var SLTools = {
             for (let message of page.messages) {
               results.push(
                 await asyncTimeout(callback(message), timeout).catch((ex) => {
-                  SLTools.error("Error processing message", message, ex);
+                  SLTools.error(
+                    "Error processing message",
+                    message,
+                    ex.toString(),
+                    ex.stack,
+                  );
                 }),
               );
             }
           } else {
             let pageResults = page.messages.map((message) =>
               asyncTimeout(callback(message), timeout).catch((ex) => {
-                SLTools.error("Error processing message", message, ex);
+                SLTools.error(
+                  "Error processing message",
+                  message,
+                  ex.toString(),
+                  ex.stack,
+                );
               }),
             );
             results = results.concat(pageResults);
