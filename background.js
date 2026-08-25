@@ -1305,18 +1305,16 @@ const SendLater = {
     const recur = SLTools.parseRecurSpec(msgRecurSpec);
     const args = msgRecurArgs ? SLTools.parseArgs(msgRecurArgs) : null;
 
-    if (
-      !(
-        skipping ||
-        (await SendLater.checkLate(
-          preferences,
-          locker,
-          nextSend,
-          msgHdr,
-          fullMsg,
-        ))
-      )
-    ) {
+    if (!(
+      skipping ||
+      (await SendLater.checkLate(
+        preferences,
+        locker,
+        nextSend,
+        msgHdr,
+        fullMsg,
+      ))
+    )) {
       SLTools.debug(`${logPrefix}checkLate returns false`);
       return;
     }
@@ -1334,20 +1332,18 @@ const SendLater = {
       return;
     }
 
-    if (
-      !(
-        skipping ||
-        (await SendLater.doSendMessage(
-          preferences,
-          options,
-          locker,
-          originalMsgId,
-          msgHdr,
-          msgLockId,
-          fullMsg,
-        ))
-      )
-    ) {
+    if (!(
+      skipping ||
+      (await SendLater.doSendMessage(
+        preferences,
+        options,
+        locker,
+        originalMsgId,
+        msgHdr,
+        msgLockId,
+        fullMsg,
+      ))
+    )) {
       SLTools.debug(`${logPrefix}doSendMessage returns false`);
       return;
     }

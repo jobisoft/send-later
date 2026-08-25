@@ -224,16 +224,14 @@ const SLOptions = {
     updating = accountsList.children.length > 0;
     for (let account of await messenger.accounts.list()) {
       // I don't know if this is comprehensive.
-      if (
-        !(
-          ["imap", "pop3"].includes(account.type) ||
-          account.type.startsWith("owl") ||
-          // I don't know exactly when this change was introduced, but it's
-          // this way in TB137, so I guess when Thunderbird versions older than
-          // TB137 are no longer supported the line above can be removed.
-          account.type.startsWith("extension:owl")
-        )
-      ) {
+      if (!(
+        ["imap", "pop3"].includes(account.type) ||
+        account.type.startsWith("owl") ||
+        // I don't know exactly when this change was introduced, but it's
+        // this way in TB137, so I guess when Thunderbird versions older than
+        // TB137 are no longer supported the line above can be removed.
+        account.type.startsWith("extension:owl")
+      )) {
         continue;
       }
       checkboxId = `activeAccount-${account.id}-Checkbox`;

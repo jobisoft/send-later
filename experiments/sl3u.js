@@ -631,22 +631,18 @@ var SL3U = class extends ExtensionCommon.ExtensionAPI {
         async signingOrEncryptingMessage(tabId) {
           let tab = context.extension.tabManager.get(tabId);
           let cw = tab.nativeTab;
-          if (
-            !(
-              cw.isSmimeSigningConfigured() ||
-              cw.isSmimeEncryptionConfigured() ||
-              cw.isPgpConfigured()
-            )
-          ) {
+          if (!(
+            cw.isSmimeSigningConfigured() ||
+            cw.isSmimeEncryptionConfigured() ||
+            cw.isPgpConfigured()
+          )) {
             return "unencrypted-ok";
           }
-          if (
-            !(
-              cw.gSendSigned ||
-              cw.gSendEncrypted ||
-              cw.gCurrentIdentity.autoEncryptDrafts
-            )
-          ) {
+          if (!(
+            cw.gSendSigned ||
+            cw.gSendEncrypted ||
+            cw.gCurrentIdentity.autoEncryptDrafts
+          )) {
             return "unencrypted-ok";
           }
           if (cw.gSelectedTechnologyIsPGP) {
