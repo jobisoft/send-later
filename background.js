@@ -203,7 +203,7 @@ async function messageImport(file, destination, properties) {
     localFolder = destination;
   } else {
     let localFolders = await messenger.folders.getSubFolders(
-      await SLTools.tb128(localAccount.id, localAccount),
+      localAccount.id,
       false,
     );
     localFolder = localFolders.find(
@@ -218,7 +218,7 @@ async function messageImport(file, destination, properties) {
   }
   let newMsgHeader = await messenger.messages.import(
     file,
-    await SLTools.tb128(localFolder.id, localFolder),
+    localFolder.id,
     properties,
   );
 
@@ -479,24 +479,6 @@ const SendLater = {
   },
 
   async schedulePrecheck() {
-    if (!(await SLTools.tb128(true, false))) {
-      let tab = await SLTools.getActiveComposeTab();
-      let composeDetails = await messenger.compose.getComposeDetails(tab.id);
-      if (composeDetails.deliveryStatusNotification) {
-        let extensionName = messenger.i18n.getMessage("extensionName");
-        let dsnName = messenger.i18n.getMessage("DSN");
-        let title = messenger.i18n.getMessage("noDsnTitle", [
-          dsnName,
-          extensionName,
-        ]);
-        let text = messenger.i18n.getMessage("noDsnText", [
-          dsnName,
-          extensionName,
-        ]);
-        SLTools.alert(title, text);
-        return false;
-      }
-    }
     return true;
   },
 
@@ -1035,7 +1017,7 @@ const SendLater = {
     );
     for (let localAccount of localAccounts) {
       let localFolders = await messenger.folders.getSubFolders(
-        await SLTools.tb128(localAccount.id, localAccount),
+        localAccount.id,
       );
       for (let localFolder of localFolders) {
         if (localFolder.type == "outbox") {
@@ -1922,29 +1904,24 @@ const SendLater = {
       }
     }
 
-    await SLTools.tb128(
-      async () => {
-        if (SendLater.prefCache.detachedPopup) return await detachedPopup();
-        // The onClicked event on the compose action button doesn't fire if a
-        // pop-up is configured, so we have to set and open the popup here and
-        // then immediately unset the popup so that we can catch the key binding
-        // if the user clicks again with a modifier.
-        messenger.composeAction.setPopup({ popup: "ui/popup.html" });
-        try {
-          if (!(await messenger.composeAction.openPopup())) {
-            SLTools.info(
-              "composeAction pop-up failed to open, trying standalone",
-            );
-            await detachedPopup();
-          }
-        } finally {
-          messenger.composeAction.setPopup({ popup: null });
+    if (SendLater.prefCache.detachedPopup) await detachedPopup();
+    else {
+      // The onClicked event on the compose action button doesn't fire if a
+      // pop-up is configured, so we have to set and open the popup here and
+      // then immediately unset the popup so that we can catch the key binding
+      // if the user clicks again with a modifier.
+      messenger.composeAction.setPopup({ popup: "ui/popup.html" });
+      try {
+        if (!(await messenger.composeAction.openPopup())) {
+          SLTools.info(
+            "composeAction pop-up failed to open, trying standalone",
+          );
+          await detachedPopup();
         }
-      },
-      async () => {
-        await detachedPopup();
-      },
-    );
+      } finally {
+        messenger.composeAction.setPopup({ popup: null });
+      }
+    }
   },
 
   // Custom events that are attached to user actions within

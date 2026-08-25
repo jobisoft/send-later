@@ -1046,10 +1046,6 @@ const SLOptions = {
 
     document.getElementById("showColumnRow").hidden = true;
 
-    await SLTools.tb128(false, () => {
-      document.getElementById("detachedPopupDiv").hidden = true;
-    });
-
     await SLOptions.applyPrefsToUI();
     await SLOptions.attachListeners();
 
